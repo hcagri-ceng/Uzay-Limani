@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-mission-bg: #0B0C10;
+  --color-mission-card: #151619;
+  --color-mission-accent: #66FCF1;
+  --color-mission-muted: #45A29E;
+  --color-mission-text: #C5C6C7;
+  
+  --color-go: #10B981;
+  --color-no-go: #EF4444;
+  --color-conditional: #F59E0B;
+}
+
+@layer base {
+  body {
+    @apply bg-mission-bg text-mission-text font-sans antialiased;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(102, 252, 241, 0.3);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(102, 252, 241, 0.5);
+  }
+}
+
+@layer components {
+  .mission-card {
+    @apply bg-mission-card border border-white/10 rounded-xl shadow-2xl;
+  }
+  
+  .mission-label {
+    @apply text-[10px] uppercase tracking-widest font-mono text-mission-muted font-bold;
+  }
+  
+  .mission-value {
+    @apply text-lg font-mono text-mission-accent;
+  }
+  
+  .mission-input {
+    @apply bg-black/40 border border-white/10 rounded px-3 py-2 font-mono text-mission-accent focus:outline-none focus:border-mission-accent/50 transition-colors;
+  }
+}
+
