@@ -122,7 +122,7 @@ def _layer_min_distance_m(
 
 
 def _overpass_urls(settings: Settings) -> list[str]:
-    raw = settings.overpass_interpreter_url.replace("\n", "").strip()
+    raw = settings.overpass_interpreter_url.replace(",", "").strip()
     return [u.strip() for u in raw.split(",") if u.strip()]
 
 

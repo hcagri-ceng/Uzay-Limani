@@ -53,16 +53,16 @@ class Settings(BaseSettings):
 
     # Overpass API — virgülle birden fazla URL: ilki başarısız olursa (429/504) sıradakiler denenir.
     overpass_interpreter_url: str = (
-        "https://overpass-api.de/api/interpreter,"
+        "https://overpass-api.de/api/interpreter,",
         "https://overpass.kumi.systems/api/interpreter"
     )
     # Liman/kıyı vektörü + demiryolu tarama yarıçapı (m) — tablo: 50 km.
-    logistics_port_rail_radius_m: float = 50_000.0
+    logistics_port_rail_radius_m: float = 30_000.0
     # Otoyol / ana yol tarama yarıçapı (m) — tablo: 20 km.
     logistics_motorway_radius_m: float = 20_000.0
-    overpass_timeout_s: float = 120.0
+    overpass_timeout_s: float = 30.0
     # İlk Overpass ile rail+road paralel grubu arası bekleme (s) — 429 azaltmak için.
-    overpass_request_gap_s: float = 0.35
+    overpass_request_gap_s: float = 0.
     # True ise OSM sorgusu yapılmaz; sabit “iyi” lojistik mock’u döner.
     use_mock_logistics: bool = False
     # True ise ``man_made=pier`` de aranır (kıyı şehirlerinde çok sonuç → Overpass yavaşlayabilir).
