@@ -39,7 +39,7 @@ class Settings(BaseSettings):
     # Merkezden dört ana yöne örnek mesafesi (metre); eğim grade tahmini için.
     elevation_sample_radius_m: float = 150.0
     # İş kuralı: tahmini max eğim % bu değeri aşarsa arazi uygunsuz (tablo: ~1–2 %).
-    max_terrain_slope_percent: float = 2.0
+    max_terrain_slope_percent: float = 15.0
     # True ise düz arazi mock’u (rakım sabit); Open Elevation çağrılmaz.
     use_mock_elevation: bool = False
 
