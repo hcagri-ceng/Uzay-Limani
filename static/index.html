@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Uzay Limanı — Test Paneli</title>
+  <style>
+    :root {
+      --bg: #0c0f14;
+      --surface: #151b24;
+      --card: #1a222e;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #e8edf4;
+      --muted: #8b98ab;
+      --accent: #4d9fff;
+      --ok: #3ecf8e;
+      --warn: #e8b84a;
+      --bad: #f07178;
+      --pass-bg: rgba(62, 207, 142, 0.12);
+      --fail-bg: rgba(240, 113, 120, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: radial-gradient(900px 500px at 15% -10%, #1e3a5f 0%, var(--bg) 50%);
+      color: var(--text);
+      margin: 0;
+      min-height: 100vh;
+      padding: 1.5rem 1rem 2.5rem;
+      line-height: 1.45;
+    }
+    .wrap { max-width: 920px; margin: 0 auto; }
+    header { margin-bottom: 1.25rem; }
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 650;
+      margin: 0 0 0.35rem;
+      letter-spacing: -0.02em;
+    }
+    .lead {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin: 0;
+      max-width: 52ch;
+    }
+    .lead code { font-size: 0.85em; background: var(--surface); padding: 0.12rem 0.35rem; border-radius: 4px; }
+    .grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 720px) {
+      .grid { grid-template-columns: 1fr 1.15fr; align-items: start; }
+    }
+    .card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 1.15rem 1.25rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+    }
+    .card h2 {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin: 0 0 0.85rem;
+      font-weight: 600;
+    }
+    label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 0.3rem; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem; }
+    @media (max-width: 480px) { .row2 { grid-template-columns: 1fr; } }
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 0.5rem 0.6rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+    .presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.85rem;
+    }
+    .presets button {
+      font-size: 0.78rem;
+      padding: 0.35rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+    }
+    .presets button:hover { border-color: var(--accent); color: var(--accent); }
+    .chk {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin: 0.5rem 0 0.85rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .actions { display: flex; flex-direction: column; gap: 0.5rem; }
+    .btn-primary {
+      width: 100%;
+      padding: 0.65rem 1rem;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #5aa7ff 0%, var(--accent) 100%);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-ghost {
+      padding: 0.45rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+    .btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+    .pill-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; margin-top: 0.35rem; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.28rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .go { background: var(--pass-bg); color: var(--ok); }
+    .conditional { background: rgba(232, 184, 74, 0.15); color: var(--warn); }
+    .no_go { background: var(--fail-bg); color: var(--bad); }
+    .meta { font-size: 0.8rem; color: var(--muted); }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    @media (min-width: 520px) { .metrics { grid-template-columns: repeat(3, 1fr); } }
+    .metric {
+      background: var(--surface);
+      border-radius: 10px;
+      padding: 0.55rem 0.65rem;
+      border: 1px solid var(--border);
+    }
+    .metric .k { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .metric .v { font-size: 1.05rem; font-weight: 600; margin-top: 0.15rem; }
+    .metric .u { font-size: 0.75rem; color: var(--muted); font-weight: 400; }
+    table.rules {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+      margin-bottom: 0.75rem;
+    }
+    table.rules th, table.rules td {
+      text-align: left;
+      padding: 0.45rem 0.35rem;
+      border-bottom: 1px solid var(--border);
+    }
+    table.rules thead th { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    table.rules tbody th { color: var(--muted); font-weight: 500; width: 22%; }
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.45rem;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 650;
+    }
+    .badge.pass { background: var(--pass-bg); color: var(--ok); }
+    .badge.fail { background: var(--fail-bg); color: var(--bad); }
+    .badge.warn { background: rgba(232, 184, 74, 0.15); color: var(--warn); }
+    .msgs { font-size: 0.82rem; color: var(--muted); margin: 0; padding-left: 1.1rem; }
+    .msgs li { margin: 0.25rem 0; }
+    details.raw { margin-top: 0.5rem; }
+    details.raw summary {
+      cursor: pointer;
+      color: var(--accent);
+      font-size: 0.82rem;
+      user-select: none;
+    }
+    pre.raw-json {
+      margin: 0.5rem 0 0;
+      padding: 0.75rem;
+      background: #0a0d12;
+      border-radius: 8px;
+      overflow: auto;
+      font-size: 0.72rem;
+      line-height: 1.4;
+      max-height: 280px;
+      border: 1px solid var(--border);
+    }
+    .err {
+      color: var(--bad);
+      font-size: 0.88rem;
+      margin-top: 0.65rem;
+      padding: 0.5rem 0.65rem;
+      background: var(--fail-bg);
+      border-radius: 8px;
+      display: none;
+    }
+    .err.show { display: block; }
+    .hint {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Uzay Limanı — veri doğrulama paneli</h1>
+      <p class="lead">
+        Sunucuyu proje klasöründe çalıştırın: <code>uvicorn main:app --reload --port 8000</code>
+        — bu sayfa <code>/ui/</code> üzerinden aynı sunucuya istek atar; böylece CORS sorunu olmaz.
+        Ham değerleri WeatherAPI sitesinde aynı koordinatı aratarak da karşılaştırabilirsiniz
+        (<a href="https://www.weatherapi.com/" target="_blank" rel="noopener">weatherapi.com</a>).
+      </p>
+    </header>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Koordinat &amp; istek</h2>
+        <div class="presets" id="presets" aria-label="Örnek konumlar"></div>
+        <form id="f">
+          <div class="row2">
+            <div>
+              <label for="lat">Enlem</label>
+              <input id="lat" type="number" step="any" value="39.9334" required />
+            </div>
+            <div>
+              <label for="lon">Boylam</label>
+              <input id="lon" type="number" step="any" value="32.8597" required />
+            </div>
+          </div>
+          <div class="row2">
+            <div>
+              <label for="landingSurface">İniş yüzeyi (tablo)</label>
+              <select id="landingSurface">
+                <option value="land">Karaya iniş</option>
+                <option value="water">Suya iniş</option>
+              </select>
+            </div>
+            <div>
+              <label for="waveHeight">Dalga yüksekliği (m)</label>
+              <input id="waveHeight" type="number" step="0.1" min="0" placeholder="Suya iniş; boş = veri yok" />
+            </div>
+          </div>
+          <label class="chk">
+            <input type="checkbox" id="mockLightning" />
+            Test: yıldırım zorla (<code>?lightning_mock=true</code>) — yalnızca kalkışı etkiler
+          </label>
+          <div class="actions">
+            <button type="submit" class="btn-primary" id="btnSim">Simüle et</button>
+            <button type="button" class="btn-ghost" id="btnHealth">Sunucu sağlığı (/health)</button>
+          </div>
+        </form>
+        <div class="err" id="err"></div>
+        <p class="hint">
+          <strong>Nasıl test edilir?</strong> Ön ayardan bir şehir seçin veya enlem/boylam girin.
+          Kalkış ve iniş ayrı değerlendirilir (rüzgar limitleri farklı). Eşikler: <code>.env</code> içinde
+          <code>WIND_TAKEOFF_MAX_KNOTS</code>, <code>WIND_LANDING_MAX_KNOTS</code>, <code>MAX_TERRAIN_SLOPE_PERCENT</code>,
+          <code>MAX_WAVE_HEIGHT_M</code>. Lojistik: Overpass (OSM) 50 km liman–demiryolu, 20 km otoyol.
+        </p>
+      </div>
+
+      <div class="card" id="resultCard" hidden>
+        <h2>Sonuç &amp; doğrulama</h2>
+        <div class="pill-row">
+          <span class="meta">Genel</span>
+          <span id="pillOverall"></span>
+          <span class="meta">Kalkış</span>
+          <span id="pillTakeoff"></span>
+          <span class="meta">İniş</span>
+          <span id="pillLanding"></span>
+        </div>
+        <p class="meta" id="metaLine" style="margin: 0.35rem 0 0;"></p>
+        <p class="meta" id="locationLine" style="margin: 0.25rem 0 0;"></p>
+
+        <h2 style="margin-top: 1rem;">Hava özeti</h2>
+        <div class="metrics" id="metrics"></div>
+        <h2 style="margin-top: 0.75rem;">Kalkış coğrafyası (ekvator bandı)</h2>
+        <div class="metrics" id="metricsPayload"></div>
+
+        <h2 style="margin-top: 1rem;">Topoğrafya (Open Elevation)</h2>
+        <p class="meta" id="elevNote" style="margin: 0 0 0.5rem;"></p>
+        <div class="metrics" id="metricsElev"></div>
+
+        <h2 style="margin-top: 1rem;">Lojistik (OpenStreetMap / Overpass)</h2>
+        <p class="meta" id="logisticsNote" style="margin: 0 0 0.5rem;"></p>
+        <div class="metrics" id="metricsLogistics"></div>
+
+        <h2>İş kuralları</h2>
+        <table class="rules" id="rulesTable">
+          <thead>
+            <tr>
+              <th>Kural</th>
+              <th>Eşik / tanım</th>
+              <th>Ölçülen</th>
+              <th>Durum</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <h2>Motor mesajları</h2>
+        <ul class="msgs" id="msgs"></ul>
+
+        <details class="raw">
+          <summary>Tam JSON yanıtı</summary>
+          <pre class="raw-json" id="rawJson"></pre>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const PRESETS = [
+      { label: "Ankara", lat: 39.9334, lon: 32.8597 },
+      { label: "İstanbul", lat: 41.0082, lon: 28.9784 },
+      { label: "Cape Canaveral", lat: 28.5721, lon: -80.6480 },
+      { label: "Ekvator yakını", lat: 0.4, lon: 9.5 },
+      { label: "McMurdo (Antarktika)", lat: -77.85, lon: 166.67 },
+    ];
+
+    const TEMP_MIN = 0;
+    const TEMP_MAX = 35;
+
+    const presetsEl = document.getElementById("presets");
+    PRESETS.forEach((p) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = p.label;
+      b.addEventListener("click", () => {
+        document.getElementById("lat").value = p.lat;
+        document.getElementById("lon").value = p.lon;
+      });
+      presetsEl.appendChild(b);
+    });
+
+    const err = document.getElementById("err");
+    const resultCard = document.getElementById("resultCard");
+
+    function showErr(msg) {
+      err.textContent = msg;
+      err.classList.add("show");
+    }
+    function hideErr() {
+      err.classList.remove("show");
+      err.textContent = "";
+    }
+
+    function pillHtml(status) {
+      const cls = status === "go" ? "go" : status === "conditional" ? "conditional" : "no_go";
+      const label = status === "no_go" ? "No-Go" : status === "conditional" ? "Koşullu" : "Go";
+      return `<span class="pill ${cls}">${label}</span>`;
+    }
+
+    function renderResult(data, ms) {
+      resultCard.hidden = false;
+      document.getElementById("pillOverall").innerHTML = pillHtml(data.overall_status);
+      document.getElementById("pillTakeoff").innerHTML = pillHtml(data.takeoff && data.takeoff.status);
+      document.getElementById("pillLanding").innerHTML = pillHtml(data.landing && data.landing.status);
+
+      const src = (data.meta && data.meta.weather_source) || "—";
+      const elevSrc = (data.meta && data.meta.elevation_source) || "—";
+      const logSrc = (data.meta && data.meta.logistics_source) || "—";
+      const ls = data.landing_surface === "water" ? "suya" : "karaya";
+      document.getElementById("metaLine").textContent =
+        `Hava: ${src} · Topoğrafya: ${elevSrc} · Lojistik: ${logSrc} · İniş: ${ls} · Süre: ${
+          ms != null ? ms + " ms" : "—"
+        }`;
+
+      const raw = (data.weather && data.weather.raw) || {};
+      const loc = raw.location_name || "—";
+      document.getElementById("locationLine").textContent = `Konum (API): ${loc}`;
+
+      const w = data.weather || {};
+      const t = raw.temp_c;
+      const wk = raw.wind_kph;
+      const gk = raw.wind_gust_kph;
+      const kn = raw.wind_knots_effective;
+      const cond = [raw.condition_code, raw.condition_text].filter(Boolean).join(" — ") || "—";
+
+      const metrics = document.getElementById("metrics");
+      metrics.innerHTML = [
+        metricCell("Sıcaklık", t != null ? Number(t).toFixed(1) : "—", "°C"),
+        metricCell("Rüzgar", wk != null ? Number(wk).toFixed(1) : "—", "km/h"),
+        metricCell("Ani rüzgar", gk != null ? Number(gk).toFixed(1) : "—", "km/h"),
+        metricCell("Etkin rüzgar", kn != null ? Number(kn).toFixed(2) : "—", "knot (kural)"),
+        metricCell("Koşul kodu", raw.condition_code != null ? String(raw.condition_code) : "—", ""),
+        metricCell("Koşul", cond.length > 40 ? cond.slice(0, 40) + "…" : cond, ""),
+      ].join("");
+
+      const ph = data.payload_hint || {};
+      const metaPh = data.meta || {};
+      const idealLat =
+        metaPh.ideal_equator_latitude_max_deg != null
+          ? Number(metaPh.ideal_equator_latitude_max_deg)
+          : 28;
+      document.getElementById("metricsPayload").innerHTML = [
+        metricCell("|Enlem|", ph.latitude_abs != null ? Number(ph.latitude_abs).toFixed(2) : "—", "°"),
+        metricCell("İdeal üst sınır", String(idealLat), "° (tablo)"),
+        metricCell(
+          "Payload ipucu",
+          ph.score_hint != null ? Number(ph.score_hint).toFixed(1) : "—",
+          "/100 (kalkış)"
+        ),
+      ].join("");
+
+      const elev = data.elevation || {};
+      const meta = data.meta || {};
+      const wtk =
+        meta.wind_takeoff_max_knots != null ? Number(meta.wind_takeoff_max_knots) : 30;
+      const wlk =
+        meta.wind_landing_max_knots != null ? Number(meta.wind_landing_max_knots) : 18;
+      const maxWave =
+        meta.max_wave_height_m != null ? Number(meta.max_wave_height_m) : 2.5;
+      const slopeMax = meta.max_terrain_slope_percent != null ? Number(meta.max_terrain_slope_percent) : 2;
+      const perDir = elev.slope_per_direction_percent;
+      const perStr =
+        Array.isArray(perDir) && perDir.length
+          ? "K, D, G, B: " + perDir.map((x) => Number(x).toFixed(2)).join(", ") + " %"
+          : "—";
+
+      const elevNote = document.getElementById("elevNote");
+      if (!elev.evaluated) {
+        elevNote.textContent =
+          (meta.elevation_error && "Rakım: " + meta.elevation_error) ||
+          "Rakım/eğim hesaplanamadı; topoğrafya No-Go kuralı uygulanmadı.";
+      } else {
+        const es = (meta.elevation_source || meta.elevation_provider || "—").toString();
+        elevNote.textContent =
+          "Kaynak: " +
+          es +
+          " — merkez + dört yön; max eğim % eşik " +
+          slopeMax +
+          " %.";
+      }
+
+      document.getElementById("metricsElev").innerHTML = [
+        metricCell(
+          "Rakım (merkez)",
+          elev.elevation_m != null ? Number(elev.elevation_m).toFixed(1) : "—",
+          "m"
+        ),
+        metricCell(
+          "Max eğim (tahmini)",
+          elev.slope_percent != null ? Number(elev.slope_percent).toFixed(2) : "—",
+          "%"
+        ),
+        metricCell(
+          "Örnek yarıçapı",
+          elev.sample_radius_m != null ? Number(elev.sample_radius_m).toFixed(0) : "—",
+          "m"
+        ),
+        metricCell("Yön başına %", perStr, ""),
+      ].join("");
+
+      const log = data.logistics || {};
+      const logisticsNoteEl = document.getElementById("logisticsNote");
+      if (!log.evaluated) {
+        logisticsNoteEl.textContent =
+          (meta.logistics_error && "Overpass: " + meta.logistics_error) ||
+          "Lojistik verisi alınamadı; OSM kuralları uygulanmadı.";
+      } else {
+        const pr =
+          meta.logistics_port_rail_radius_m != null
+            ? Math.round(Number(meta.logistics_port_rail_radius_m) / 1000)
+            : 50;
+        const mr =
+          meta.logistics_motorway_radius_m != null
+            ? Math.round(Number(meta.logistics_motorway_radius_m) / 1000)
+            : 20;
+        logisticsNoteEl.textContent = `Harbour/pier/ferry + rail (${pr} km) + motorway/trunk (${mr} km) taraması.`;
+      }
+      const cnt = log.osm_feature_counts || {};
+      document.getElementById("metricsLogistics").innerHTML = [
+        metricCell(
+          "Liman/kıyı (en yakın)",
+          log.nearest_maritime_like_m != null ? Math.round(Number(log.nearest_maritime_like_m)) : "—",
+          "m"
+        ),
+        metricCell(
+          "Demiryolu rail",
+          log.nearest_rail_m != null ? Math.round(Number(log.nearest_rail_m)) : "—",
+          "m"
+        ),
+        metricCell(
+          "Otoyol/trunk",
+          log.nearest_motorway_m != null ? Math.round(Number(log.nearest_motorway_m)) : "—",
+          "m"
+        ),
+        metricCell(
+          "OSM öğe sayısı",
+          `${cnt.maritime != null ? cnt.maritime : 0} / ${cnt.rail != null ? cnt.rail : 0} / ${
+            cnt.motorway != null ? cnt.motorway : 0
+          }`,
+          "maritime / rail / road"
+        ),
+      ].join("");
+
+      const takeoffWindPass = !w.exceeds_takeoff_wind_limit;
+      const landingWindPass = !w.exceeds_landing_wind_limit;
+      const tempInside = t == null ? null : Number(t) >= TEMP_MIN && Number(t) <= TEMP_MAX;
+      const lightningPass = !w.lightning_detected;
+      const lsurf = data.landing_surface || "land";
+
+      const tbody = document.querySelector("#rulesTable tbody");
+      const rows = [
+        ruleRow(
+          "Kalkış — yüzey rüzgarı",
+          `Etkin ≤ ${wtk} kt`,
+          kn != null ? `~${Number(kn).toFixed(2)} kt` : "—",
+          takeoffWindPass ? "pass" : "fail",
+          takeoffWindPass ? "Uygun" : "Kalkış No-Go"
+        ),
+        ruleRow(
+          "İniş — yüzey rüzgarı",
+          `Etkin ≤ ${wlk} kt`,
+          kn != null ? `~${Number(kn).toFixed(2)} kt` : "—",
+          landingWindPass ? "pass" : "fail",
+          landingWindPass ? "Uygun" : "İniş No-Go (sapma riski)"
+        ),
+        ruleRow(
+          "Sıcaklık",
+          `${TEMP_MIN}–${TEMP_MAX} °C (kalkış/iniş)`,
+          t != null ? `${Number(t).toFixed(1)} °C` : "—",
+          tempInside === null ? "warn" : tempInside ? "pass" : "warn",
+          tempInside === null ? "Veri yok" : tempInside ? "Bant içi" : "Koşullu uyarı"
+        ),
+        ruleRow(
+          "Yıldırım (kalkış)",
+          "Kalkış için risk yok",
+          w.lightning_detected ? "Tespit / mock" : "Yok",
+          lightningPass ? "pass" : "fail",
+          lightningPass ? "Kalkışa etki yok" : "Kalkış No-Go (iniş tek başına bloke değil)"
+        ),
+        ruleRow(
+          "Eğim (kalkış alanı / karaya iniş)",
+          `Max ≤ ${slopeMax} %`,
+          elev.evaluated
+            ? elev.slope_percent != null
+              ? `~${Number(elev.slope_percent).toFixed(2)} %`
+              : "—"
+            : "Veri yok",
+          !elev.evaluated ? "warn" : elev.terrain_unsuitable ? "fail" : "pass",
+          !elev.evaluated
+            ? "Kural uygulanmadı"
+            : elev.terrain_unsuitable
+              ? "No-Go (kalkış; karaya iniş)"
+              : lsurf === "water"
+                ? "Kalkış alanı OK; su inişi dalga satırında"
+                : "Uygun"
+        ),
+      ];
+
+      if (log.evaluated) {
+        const triBadge = (v) =>
+          v === true ? "pass" : v === false ? "warn" : "warn";
+        const triText = (v, ok, bad) =>
+          v === true ? ok : v === false ? bad : "Katman yok / bilinmiyor";
+        rows.push(
+          ruleRow(
+            "OSM — liman/kıyı",
+            "50 km harbour/pier/ferry",
+            log.nearest_maritime_like_m != null
+              ? `~${Math.round(Number(log.nearest_maritime_like_m))} m`
+              : log.deep_water_port_within_50km === false
+                ? "Yok"
+                : "—",
+            triBadge(log.deep_water_port_within_50km),
+            triText(log.deep_water_port_within_50km, "Tespit", "Kalkış koşullu riski")
+          ),
+          ruleRow(
+            "OSM — demiryolu",
+            "50 km railway=rail",
+            log.nearest_rail_m != null ? `~${Math.round(Number(log.nearest_rail_m))} m` : "—",
+            triBadge(log.heavy_rail_within_50km),
+            triText(log.heavy_rail_within_50km, "Var", "~2x maliyet / koşullu")
+          ),
+          ruleRow(
+            "OSM — otoyol",
+            "20 km motorway/trunk",
+            log.nearest_motorway_m != null ? `~${Math.round(Number(log.nearest_motorway_m))} m` : "—",
+            triBadge(log.motorway_within_20km),
+            triText(log.motorway_within_20km, "Var", "İniş koşullu (acil erişim)")
+          )
+        );
+      } else {
+        rows.push(
+          ruleRow(
+            "OSM lojistik",
+            "Overpass",
+            "—",
+            "warn",
+            meta.logistics_error ? "Hata" : "Veri yok"
+          )
+        );
+      }
+
+      if (lsurf === "water") {
+        const wh = meta.requested_wave_height_m;
+        const whStr =
+          wh != null && wh !== "" && !Number.isNaN(Number(wh)) ? `${Number(wh)} m` : "Gönderilmedi";
+        let waveBadge = "warn";
+        let waveText = "Koşullu";
+        if (wh != null && wh !== "" && !Number.isNaN(Number(wh))) {
+          if (Number(wh) > maxWave) {
+            waveBadge = "fail";
+            waveText = "İniş No-Go";
+          } else {
+            waveBadge = "pass";
+            waveText = "Uygun";
+          }
+        }
+        rows.push(
+          ruleRow(
+            "Suya iniş — dalga",
+            `< ${maxWave} m (tablo 2–3 m)`,
+            whStr,
+            waveBadge,
+            waveText
+          )
+        );
+      }
+
+      tbody.innerHTML = rows.join("");
+
+      const msgs = document.getElementById("msgs");
+      msgs.innerHTML = "";
+      const all = []
+        .concat(data.overall_messages || [])
+        .concat((data.takeoff && data.takeoff.messages) || [])
+        .concat((data.landing && data.landing.messages) || [])
+        .concat(w.messages || [])
+        .concat(ph.messages || [])
+        .concat(elev.messages || [])
+        .concat(log.messages || []);
+      all.forEach((m) => {
+        const li = document.createElement("li");
+        li.textContent = m;
+        msgs.appendChild(li);
+      });
+      if (!all.length) {
+        const li = document.createElement("li");
+        li.textContent = "(Mesaj yok)";
+        msgs.appendChild(li);
+      }
+
+      document.getElementById("rawJson").textContent = JSON.stringify(data, null, 2);
+    }
+
+    function metricCell(title, value, unit) {
+      return `<div class="metric"><div class="k">${escapeHtml(title)}</div><div class="v">${escapeHtml(String(value))}<span class="u"> ${escapeHtml(unit)}</span></div></div>`;
+    }
+
+    function ruleRow(name, rule, actual, badgeClass, badgeText) {
+      return `<tr><th>${escapeHtml(name)}</th><td>${escapeHtml(rule)}</td><td>${escapeHtml(actual)}</td><td><span class="badge ${badgeClass}">${escapeHtml(badgeText)}</span></td></tr>`;
+    }
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    document.getElementById("f").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      hideErr();
+      const btn = document.getElementById("btnSim");
+      btn.disabled = true;
+      const t0 = performance.now();
+
+      const lat = parseFloat(document.getElementById("lat").value);
+      const lon = parseFloat(document.getElementById("lon").value);
+      const mock = document.getElementById("mockLightning").checked;
+      const landingSurface = document.getElementById("landingSurface").value;
+      const waveRaw = document.getElementById("waveHeight").value.trim();
+      let url = "/api/v1/simulate";
+      if (mock) url += "?lightning_mock=true";
+
+      const payload = { latitude: lat, longitude: lon, landing_surface: landingSurface };
+      if (landingSurface === "water" && waveRaw !== "") {
+        const wh = parseFloat(waveRaw);
+        if (!Number.isNaN(wh)) payload.wave_height_m = wh;
+      }
+
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json().catch(() => ({}));
+        const ms = Math.round(performance.now() - t0);
+        if (!res.ok) {
+          throw new Error(
+            typeof data.detail === "string"
+              ? data.detail
+              : JSON.stringify(data.detail || data) || res.statusText
+          );
+        }
+        renderResult(data, ms);
+      } catch (x) {
+        showErr("İstek hatası: " + x.message);
+        resultCard.hidden = true;
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById("btnHealth").addEventListener("click", async () => {
+      hideErr();
+      try {
+        const t0 = performance.now();
+        const res = await fetch("/health");
+        const data = await res.json();
+        const ms = Math.round(performance.now() - t0);
+        alert("OK — " + JSON.stringify(data) + " (" + ms + " ms)");
+      } catch (x) {
+        showErr("/health erişilemedi: " + x.message);
+      }
+    });
+  </script>
+</body>
+</html>
