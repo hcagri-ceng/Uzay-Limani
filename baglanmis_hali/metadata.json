@@ -1,0 +1,5 @@
+{
+  "name": "Spaceport Simulator",
+  "description": "Mission Control Dashboard for launch suitability simulation based on weather, elevation, and logistics data.",
+  "requestFramePermissions": []
+}
