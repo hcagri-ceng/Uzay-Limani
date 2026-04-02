@@ -94,4 +94,17 @@ The application relies on the following APIs for background data processing:
 
 Our primary goal with SpacePort Simulator is to create a dynamic monitoring tool. The physical world is constantly changing; thanks to our API-driven architecture, the system can continuously track shifts in weather patterns or logistical developments in a selected region, ensuring that the spaceport suitability assessments remain up-to-date and accurate over time.
 
+## 🚀 Getting Started / How to Run
+
+To run the SpacePort Simulator on your local machine, please follow these steps:
+
+1. **Internet Connection:** An active internet connection is strictly required, as the application relies on fetching real-time data from external APIs.
+2. **Start the Local Server:** You must initialize and run a local server hosted specifically on **port 3000**. 
+3. **API Key Configuration:** The project currently uses trial API keys. If the application fails to fetch data or the provided keys are no longer active, you must configure the environment variables and connect your own personal API keys.
+4. **Usage:** Once the server is running and the connection is established, you can start using the application by following the steps outlined in the "How It Works" section above.
+
+📫 **Contact:** If you have any questions, encounter issues, or want to contribute, please feel free to reach out to us at: [Your/Team Email Address]
+
+
+
 
